@@ -10,6 +10,7 @@
 library(shiny)
 library(mapboxer)
 library(dplyr)
+library(shinythemes)
 
 # # Create a source
 # motor_vehicle_collisions_nyc %>%
@@ -31,7 +32,7 @@ library(dplyr)
 #   )
 
 # Define UI for application that draws a histogram
-ui <- fluidPage(
+ui <- fluidPage(theme = shinytheme("flatly"),
 
     # Application title
     titlePanel("CRC Mapping Sandbox"),
@@ -39,16 +40,13 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
+            selectInput("bins",
                         "Select variable:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+                        choices = c("a", "b"))
         ),
 
         # Show a plot of the generated distribution
         mainPanel(
-          h1("mapboxer"),
           mapboxerOutput("map")
         )
     )
