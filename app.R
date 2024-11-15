@@ -5,7 +5,8 @@ library(shinythemes)
 library(haven)
 library(urbnmapr)
 
-counties_sf <- get_urbn_map("counties", sf = TRUE)
+counties_sf <- get_urbn_map("counties", sf = TRUE) %>% 
+  as_mapbox_source()
 
 hdallyears <- read_dta("hdallyears.dta")
 
@@ -16,7 +17,7 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                 
                 # Sidebar with a slider input for number of bins 
                 sidebarLayout(
-                  sidebarPanel(
+                  sidebarPanel(width = 3,
                     selectInput("selected_size",
                                 "Select institutional size:",
                                 choices = c("Under 1,000" = 1,
@@ -60,14 +61,17 @@ server <- function(input, output) {
         circle_color = "white",
         circle_radius = 3,
         popup = "Institution: {{instnm}}"
-      ) %>% 
-      
-      add_fill_layer(
-        source = counties_sf,
-        fill_color = "white",  # Set the fill color
-        fill_opacity = 0.5,  # Adjust transparency
-        fill_outline_color = "white"  # Optional: add an outline
       )
+      
+      # add_source(map = counties_sf,
+      #            id = "counties") %>% 
+      # 
+      # add_fill_layer(
+      #   id = "counties",
+      #   fill_color = "white",  # Set the fill color
+      #   fill_opacity = 0.5,  # Adjust transparency
+      #   fill_outline_color = "white"  # Optional: add an outline
+      # )
     
   })
 }
