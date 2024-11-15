@@ -4,8 +4,6 @@ library(dplyr)
 library(shinythemes)
 library(haven)
 
-# docs: https://cran.r-project.org/web/packages/mapboxer/vignettes/mapboxer.html
-
 hdallyears <- read_dta("hdallyears.dta")
 
 ui <- fluidPage(theme = shinytheme("flatly"),
