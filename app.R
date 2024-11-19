@@ -4,11 +4,47 @@ library(dplyr)
 library(shinythemes)
 library(haven)
 library(urbnmapr)
+library(tidyverse)
+library(tidycensus)
 
-counties_sf <- get_urbn_map("counties", sf = TRUE) %>% 
+# counties_sf <- get_urbn_map("counties", sf = TRUE)
+# write_rds(counties_sf, "counties_sf.rds")
+
+counties_sf <- read_rds("counties_sf.rds")
+
+# Sys.setenv(PATH = paste("/opt/homebrew/bin", Sys.getenv("PATH"), sep = ":"))
+# Sys.setenv(PROJ_LIB = "/opt/homebrew/Cellar/proj/9.4.1/share/proj")
+# Sys.setenv(GDAL_CONFIG = "/opt/homebrew/bin/gdal-config")
+
+counties_sf <- sf::st_transform(counties_sf, crs = 4326)
+
+counties_sf <- counties_sf %>% 
   as_mapbox_source()
 
-hdallyears <- read_dta("hdallyears.dta")
+source("token.R")
+
+# ipeds_green <- read_dta("ipeds&green.dta")
+# 
+# ipeds_green_summed <- ipeds_green %>% 
+#   group_by(unitid, greencat) %>% 
+#   summarize(sum_cmplt_green = sum(cmplt_tot)) %>% 
+#   filter(greencat != "") %>% 
+#   spread(greencat, sum_cmplt_green)
+# 
+# write_rds(ipeds_green_summed, "ipeds_green_summed.rds")
+
+ipeds_green_summed <- read_rds("ipeds_green_summed.rds")
+
+# hdallyears <- read_dta("hdallyears.dta")
+# 
+# hdallyears <- hdallyears %>%
+#   filter(year == 2020)
+# 
+# write_rds(hdallyears, "hdallyears.rds")
+hdallyears <- read_rds("hdallyears.rds")
+
+hdallyears_joined <- hdallyears %>% 
+  left_join(ipeds_green_summed, by = "unitid")
 
 ui <- fluidPage(theme = shinytheme("flatly"),
                 
@@ -18,16 +54,9 @@ ui <- fluidPage(theme = shinytheme("flatly"),
                 # Sidebar with a slider input for number of bins 
                 sidebarLayout(
                   sidebarPanel(width = 3,
-                    selectInput("selected_size",
-                                "Select institutional size:",
-                                choices = c("Under 1,000" = 1,
-                                            "1,000 - 4,999" = 2,
-                                            "5,000 - 9,999" = 3,
-                                            "10,000 - 19,999" = 4,
-                                            "20,000 and above" = 5)),
-                    selectInput("selected_year",
-                                "Select year:",
-                                choices = c(2010, 2015, 2020))
+                               selectInput("selected_green_category",
+                                           "Select category:",
+                                           choices = c("Green New & Emerging", "Green Enhanced Skills", "Green Increased Demand")),
                   ),
                   
                   # Show a plot of the generated distribution
@@ -40,17 +69,18 @@ ui <- fluidPage(theme = shinytheme("flatly"),
 server <- function(input, output) {
   
   output$map <- renderMapboxer({
-    
-    hdallyears %>%
-      filter(year == input$selected_year) %>%
-      filter(instsize == as.integer(input$selected_size)) %>%
+
+    hdallyears_joined %>% 
+      select(instnm, longitud, latitude, input$selected_green_category) %>% 
+      rename(greencat = 4) %>%
       as_mapbox_source(lng = "longitud", lat = "latitude") %>%
       
       # Setup a map with the default source above
       mapboxer(
-        # style = "mapbox://styles/mapbox/light-v10",
+        style = "mapbox://styles/mapbox/light-v10",
         center = c(-95, 40),
-        zoom = 2.5
+        zoom = 2.5,
+        token = mapbox_token
       ) %>%
       
       # Add a navigation control
@@ -58,20 +88,19 @@ server <- function(input, output) {
       
       # Add a layer styling the data of the default source
       add_circle_layer(
-        circle_color = "white",
-        circle_radius = 3,
+        circle_color = "black",
+        circle_radius = list(
+          "greencat" = "size"
+        ),
         popup = "Institution: {{instnm}}"
-      )
+      ) %>% 
       
-      # add_source(map = counties_sf,
-      #            id = "counties") %>% 
-      # 
-      # add_fill_layer(
-      #   id = "counties",
-      #   fill_color = "white",  # Set the fill color
-      #   fill_opacity = 0.5,  # Adjust transparency
-      #   fill_outline_color = "white"  # Optional: add an outline
-      # )
+      add_fill_layer(
+        source = counties_sf,
+        fill_color = "gray",  # Set the fill color
+        fill_opacity = 0.1,  # Adjust transparency
+        fill_outline_color = "gray"  # Optional: add an outline
+      )
     
   })
 }

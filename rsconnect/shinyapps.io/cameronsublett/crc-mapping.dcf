@@ -5,7 +5,7 @@ account: cameronsublett
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 13341362
-bundleId: 9363813
+bundleId: 9369012
 url: https://crc-sandbox.shinyapps.io/crc-mapping/
 version: 1
 asMultiple: FALSE
