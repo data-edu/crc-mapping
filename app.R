@@ -35,6 +35,9 @@ source("token.R")
 
 ipeds_green_summed <- read_rds("ipeds_green_summed.rds")
 
+ipeds_green_summed <- ipeds_green_summed %>% 
+  pivot_longer(-unitid, names_to = "greencat", values_to = "size")
+
 # hdallyears <- read_dta("hdallyears.dta")
 # 
 # hdallyears <- hdallyears %>%
@@ -69,10 +72,10 @@ ui <- fluidPage(theme = shinytheme("flatly"),
 server <- function(input, output) {
   
   output$map <- renderMapboxer({
-
+    
     hdallyears_joined %>% 
-      select(instnm, longitud, latitude, input$selected_green_category) %>% 
-      rename(greencat = 4) %>%
+      select(instnm, longitud, latitude, greencat, size) %>% 
+      filter(greencat == input$selected_green_category) %>%
       as_mapbox_source(lng = "longitud", lat = "latitude") %>%
       
       # Setup a map with the default source above
@@ -89,8 +92,14 @@ server <- function(input, output) {
       # Add a layer styling the data of the default source
       add_circle_layer(
         circle_color = "black",
+        # circle_radius = 1,
         circle_radius = list(
-          "greencat" = "size"
+          "step", c("get", "size"),
+          .5, 10,
+          1, 100,
+          1.5, 1000,
+          2, 10000,
+          2.5
         ),
         popup = "Institution: {{instnm}}"
       ) %>% 
