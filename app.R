@@ -6,14 +6,13 @@ library(urbnmapr)
 library(tidycensus)
 library(sf)
 
-
 hdallyears_joined <- hdallyears %>% 
   left_join(ipeds_green_summed, by = "unitid")
 
 ui <- fluidPage(theme = shinytheme("flatly"),
                 
                 # Application title
-                titlePanel("CRC Mapping Sandbox"),
+                titlePanel("CCRC Mapping Sandbox"),
                 
                 # Sidebar with a slider input for number of bins 
                 sidebarLayout(
@@ -62,14 +61,22 @@ server <- function(input, output) {
           2, 10000,
           2.5
         ),
-        popup = "Institution: {{instnm}}"
+        popup = "Institution: {{instnm}}, No.: {{size}}"
       ) %>% 
       
       add_fill_layer(
-        source = counties_sf,
-        fill_color = "gray",  # Set the fill color
-        fill_opacity = 0.1,  # Adjust transparency
-        fill_outline_color = "gray"  # Optional: add an outline
+        source = counties_sf,               # Data source (e.g., GeoJSON or sf object)
+        fill_color = list(
+          "property" = "unique_postings",   # The variable to base the fill color on
+          "stops" = list(
+            list(0, "#f7fbff"),             # Lightest color for the lowest value
+            list(10000, "#c6dbef"),         # Intermediate color for mid-range values
+            list(30000, "#6baed6"),         # Slightly darker for higher values
+            list(51000, "#08306b")          # Darkest color for the highest value
+          )
+        ),
+        fill_opacity = 0.7,                 # Adjust transparency for better visibility
+        fill_outline_color = "gray"         # Optional: add a gray outline
       )
     
   })
