@@ -42,10 +42,12 @@ ipeds_green_summed <- ipeds_green %>%
   filter(greencat != "") %>%
   spread(greencat, sum_cmplt_green)
 
-write_rds(ipeds_green_summed, "ipeds_green_summed.rds")
-
 ipeds_green_summed <- ipeds_green_summed %>% 
   pivot_longer(-unitid, names_to = "greencat", values_to = "size")
+
+write_rds(ipeds_green_summed, "ipeds_green_summed.rds")
+
+
 
 hdallyears <- read_dta("raw-data/hdallyears.dta")
 
