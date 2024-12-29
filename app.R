@@ -6,6 +6,8 @@ library(urbnmapr)
 library(tidycensus)
 library(sf)
 
+source("prep-data.R")
+
 hdallyears_joined <- hdallyears %>% 
   left_join(ipeds_green_summed, by = "unitid")
 

@@ -4,7 +4,7 @@ library(tidyverse)
 library(sf)
 library(urbnmapr)
 
-tn_test <- read_dta("raw-data/TN_test.dta")
+tn_test <- read_dta("raw-data/TN_test.dta") # lightcast/jobs posting data
 
 tn_test
 
