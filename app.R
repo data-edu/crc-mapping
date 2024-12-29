@@ -10,8 +10,6 @@ library(sf)
 
 ## loading data
 
-# prep-data.R is used to create the below three files from the raw data
-
 hdallyears <- read_rds("hdallyears.rds")
 ipeds_green_summed <- read_rds("ipeds_green_summed.rds")
 counties_sf <- read_rds("counties_sf_processed.rds")
