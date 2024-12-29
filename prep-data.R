@@ -30,6 +30,8 @@ counties_sf <- st_transform(counties_sf, crs = 4326)
 counties_sf <- counties_sf %>% 
   as_mapbox_source()
 
+counties_sf %>% write_rds("counties_sf_processed.rds")
+
 source("token.R")
 
 ipeds_green <- read_dta("raw-data/ipeds&green.dta")
@@ -42,8 +44,6 @@ ipeds_green_summed <- ipeds_green %>%
 
 write_rds(ipeds_green_summed, "ipeds_green_summed.rds")
 
-ipeds_green_summed <- read_rds("ipeds_green_summed.rds")
-
 ipeds_green_summed <- ipeds_green_summed %>% 
   pivot_longer(-unitid, names_to = "greencat", values_to = "size")
 
@@ -53,5 +53,6 @@ hdallyears <- hdallyears %>%
   filter(year == 2020)
 
 write_rds(hdallyears, "hdallyears.rds")
-hdallyears <- read_rds("hdallyears.rds")
+
+
 

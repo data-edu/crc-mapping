@@ -4,5 +4,4 @@
 .Ruserdata
 token.R
 *.dta
-*.rds
 *.csv
