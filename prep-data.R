@@ -47,6 +47,8 @@ ipeds_green_summed <- ipeds_green_summed %>%
 
 write_rds(ipeds_green_summed, "ipeds_green_summed.rds")
 
+
+
 hdallyears <- read_dta("raw-data/hdallyears.dta")
 
 hdallyears <- hdallyears %>%
