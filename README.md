@@ -11,7 +11,7 @@ data needed to run locally:
   * `hdallyears.rds`
   * `counties_sf.rds
   
-## Raw data
+## Raw data used to create the data used for the app 
 
 `prep-data.R` is used to create the below three files from the raw data and it uses three raw files (in the below data folder):
 1. hdallyears.dta
