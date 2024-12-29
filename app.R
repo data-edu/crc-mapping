@@ -12,9 +12,9 @@ library(readr)
 
 ## loading data
 
-hdallyears <- read_rds("hdallyears.rds")
-ipeds_green_summed <- read_rds("ipeds_green_summed.rds")
-counties_sf <- read_rds("counties_sf_processed.rds")
+hdallyears <- read_rds("hdallyears.rds") # this is the demand side data
+ipeds_green_summed <- read_rds("ipeds_green_summed.rds") # this is supply-side
+counties_sf <- read_rds("counties_sf_processed.rds") # This is the shapes for counties - neither supply nor demand
 
 ## a little prep/processing
 
