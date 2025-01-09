@@ -1,9 +1,6 @@
 ###########
-## this version add clear btn
+## this version only add clear btn
 ############
-
-
-
 ## loading packages
 
 library(shiny)
