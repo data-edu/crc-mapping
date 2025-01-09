@@ -23,6 +23,7 @@ data folder, private: https://liveutk-my.sharepoint.com/personal/csublet1_utk_ed
 ## Wei update the app during winterbreak
 run locally(Rstudio) the `Institution_Search Marker.R `  instead of app.R (make sure have your mapbox token first)
 
+
 `Institution_Search Marker.R ` is updating the APP UI and also the sever , the user can input the institution name and see the marker, Zoom the map
 
 ### Overall update
@@ -34,5 +35,7 @@ run locally(Rstudio) the `Institution_Search Marker.R `  instead of app.R (make 
 
 ![Institution Search](Images/Marker.png)
 
+### keep update
+update the clear btn: `Institution_Search Marker Clear.R `
 
-
+update the APP `Institution Search.R `: write a  Function(render_map) render the map to reduce the code complexity
