@@ -22,7 +22,7 @@ hdallyears_joined <- hdallyears %>%
 ## app
 ui <- fluidPage(
   theme = shinytheme("flatly"),
-  titlePanel("CCRC Mapping Sandbox"),
+  titlePanel("CRC Mapping"),
   
   # Search and control panel
   fluidRow(
@@ -90,7 +90,7 @@ server <- function(input, output, session) {
           1000, 4, 
           5000, 8
         ),
-        popup = "Institution: {{instnm}}, Graduates: {{size}}"
+        popup = "Institution: {{instnm}}, No: {{size}}"
       ) %>%
       add_fill_layer(
         source = counties_sf,
@@ -150,7 +150,7 @@ server <- function(input, output, session) {
         lat = map_state$lat,
         popup = paste(
           "Institution:", coords$instnm, 
-          "<br>Graduates (", input$selected_green_category, "):", coords$size
+          "<br>No (", input$selected_green_category, "):", coords$size
         )
       )
       
